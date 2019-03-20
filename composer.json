@@ -1,0 +1,36 @@
+{
+  "name": "lamoda/queue-bundle",
+  "description": "Symfony queue bundle",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.1.0",
+    "ext-PDO": "^7.1",
+    "ext-json": "^1.5",
+    "doctrine/doctrine-bundle": "^1.9",
+    "doctrine/orm": "~2.3",
+    "jms/serializer-bundle": "^2.4",
+    "php-amqplib/php-amqplib": "~2.6",
+    "php-amqplib/rabbitmq-bundle": "~1.14.3",
+    "symfony/config": "^3.4|^4.1",
+    "symfony/console": "^3.4|^4.1",
+    "symfony/dependency-injection": "^3.4|^4.1",
+    "symfony/event-dispatcher": "^3.4 || ^4.1",
+    "symfony/monolog-bundle": "^3.3"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.13",
+    "codeception/codeception": "~2.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lamoda\\QueueBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Lamoda\\QueueBundle\\Tests\\Unit\\": "tests/unit/"
+    }
+  }
+}

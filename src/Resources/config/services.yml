@@ -1,0 +1,100 @@
+services:
+    lamoda_queue.consumer: '@Lamoda\QueueBundle\Consumer'
+    lamoda_queue.command.consumer: '@Lamoda\QueueBundle\Command\QueueConsumerCommand'
+    lamoda_queue.factory.publisher: '@Lamoda\QueueBundle\Factory\PublisherFactory'
+    lamoda_queue.factory.entity: '@Lamoda\QueueBundle\Factory\EntityFactory'
+    lamoda_queue.handler.job: '@Lamoda\QueueBundle\Handler\JobHandler'
+    lamoda_queue.service.requeue: '@Lamoda\QueueBundle\Service\QueueRequeueService'
+    lamoda_queue.service.republish: '@Lamoda\QueueBundle\Service\QueueRepublishService'
+    lamoda_queue.repository.queue: '@Lamoda\QueueBundle\Entity\QueueRepository'
+    lamoda_queue.service.queue: '@Lamoda\QueueBundle\Service\QueueService'
+    lamoda_queue.service.delay: '@Lamoda\QueueBundle\Service\DelayService'
+    lamoda_queue.command.requeue: '@Lamoda\QueueBundle\Command\QueueRequeueCommand'
+    lamoda_queue.command.republish: '@Lamoda\QueueBundle\Command\QueueRepublishCommand'
+    lamoda_queue.strategy.delay.geometric_progression: '@Lamoda\QueueBundle\Strategy\Delay\GeometricProgressionStrategy'
+    Lamoda\QueueBundle\Strategy\Delay\DelayStrategyInterface: '@Lamoda\QueueBundle\Strategy\Delay\GeometricProgressionStrategy'
+    lamoda_queue.strategy.delay.default: '@Lamoda\QueueBundle\Strategy\Delay\DelayStrategyInterface'
+
+    Lamoda\QueueBundle\Consumer:
+        arguments:
+            - '@Lamoda\QueueBundle\Service\QueueService'
+            - '@Lamoda\QueueBundle\Handler\JobHandler'
+            - '@JMS\Serializer\SerializerInterface'
+            - '@Doctrine\ORM\EntityManagerInterface'
+            - '@Psr\Log\LoggerInterface'
+            - '@Lamoda\QueueBundle\Service\DelayService'
+    Lamoda\QueueBundle\Factory\PublisherFactory:
+        public: true
+        lazy: true
+        arguments:
+            - '@service_container'
+            - '@Lamoda\QueueBundle\Service\QueueService'
+            - '@Psr\Log\LoggerInterface'
+            - '@Lamoda\QueueBundle\Service\DelayService'
+    Lamoda\QueueBundle\Factory\EntityFactory:
+        arguments:
+            - '@JMS\Serializer\SerializerInterface'
+            - '%lamoda_queue.entity_class%'
+    Lamoda\QueueBundle\Handler\JobHandler:
+        arguments:
+            - '@service_container'
+            - {} #see JobHandlerCompilerPass
+    Lamoda\QueueBundle\Event\Listener:
+        arguments:
+            - '@Lamoda\QueueBundle\Factory\PublisherFactory'
+        tags:
+            - { name: kernel.event_listener, event: kernel.finish_request, method: onTransitionFinished }
+            - { name: kernel.event_listener, event: console.terminate,     method: onTransitionFinished }
+    Lamoda\QueueBundle\Service\QueueRequeueService:
+        arguments:
+            - '@Lamoda\QueueBundle\Factory\PublisherFactory'
+            - '@Lamoda\QueueBundle\Service\QueueService'
+            - '@Psr\Log\LoggerInterface'
+    Lamoda\QueueBundle\Service\QueueRepublishService:
+        arguments:
+            - '@Lamoda\QueueBundle\Factory\PublisherFactory'
+            - '@Lamoda\QueueBundle\Service\QueueService'
+            - '@Psr\Log\LoggerInterface'
+    Lamoda\QueueBundle\Entity\QueueRepository:
+        factory: ['@Doctrine\ORM\EntityManagerInterface', getRepository]
+        arguments:
+            - '%lamoda_queue.entity_class%'
+    Lamoda\QueueBundle\Service\QueueService:
+        arguments:
+            - '@Lamoda\QueueBundle\Entity\QueueRepository'
+            - '@Lamoda\QueueBundle\Factory\EntityFactory'
+            - '@event_dispatcher'
+            - '%lamoda_queue.max_attempts%'
+    Lamoda\QueueBundle\Service\DelayService:
+        arguments:
+            - '@Lamoda\QueueBundle\Strategy\Delay\DelayStrategyInterface'
+    Lamoda\QueueBundle\Strategy\Delay\GeometricProgressionStrategy:
+        arguments:
+            - '%lamoda_queue.strategy_delay_geometric_progression_start_interval_sec%'
+            - '%lamoda_queue.strategy_delay_geometric_progression_multiplier%'
+    Lamoda\QueueBundle\Command\QueueRepublishCommand:
+        public: true
+        arguments:
+            - '@Lamoda\QueueBundle\Service\QueueRepublishService'
+            - '%lamoda_queue.batch_size_per_republish%'
+        tags:
+            - { name: console.command }
+    Lamoda\QueueBundle\Command\QueueRequeueCommand:
+        public: true
+        arguments:
+            - '@Lamoda\QueueBundle\Service\QueueRequeueService'
+            - '%lamoda_queue.batch_size_per_requeue%'
+        tags:
+            - { name: console.command }
+    Lamoda\QueueBundle\Command\QueueConsumerCommand:
+        public: true
+        arguments:
+            - 'queue:consumer'
+            - '@Psr\Log\LoggerInterface'
+            - '%lamoda_queue.command_unexpected_end_script_timeout%'
+        tags:
+            - { name: console.command }
+    Lamoda\QueueBundle\Command\QueueInitCommand:
+        public: true
+        tags:
+            - { name: console.command }
