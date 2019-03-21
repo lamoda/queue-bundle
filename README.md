@@ -5,7 +5,7 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/lamoda/queue-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/lamoda/queue-bundle/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/lamoda/queue-bundle/badges/build.png?b=master)](https://scrutinizer-ci.com/g/lamoda/queue-bundle/build-status/master)
 
-Symfony bundle for convenient work with queues. It supports RabbitMQ only.
+Symfony bundle for convenient work with queues. Currently it supports RabbitMQ.
 
 ## Installation
 
@@ -14,10 +14,11 @@ Symfony bundle for convenient work with queues. It supports RabbitMQ only.
 	composer require lamoda/queue-bundle
 	```
 
-1. Extend QueueEntityMappedSupperClass
+1. Extend `Lamoda\QueueBundle\Entity\QueueEntityMappedSuperclass`
 
     ```php
-    use Doctrine\ORM\Mapping as ORM;   
+    use Doctrine\ORM\Mapping as ORM;
+    use Lamoda\QueueBundle\Entity\QueueEntityMappedSuperclass;
  
     /**
      * @ORM\Entity(repositoryClass="Lamoda\QueueBundle\Entity\QueueRepository")
