@@ -32,5 +32,8 @@
     "psr-4": {
       "Lamoda\\QueueBundle\\Tests\\Unit\\": "tests/unit/"
     }
+  },
+  "config": {
+    "sort-packages": true
   }
 }
