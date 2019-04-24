@@ -127,7 +127,7 @@ class QueueService
         return $this->save($this->entityFactory->createQueue($queueable));
     }
 
-    public function flush(QueueEntityInterface $entity): QueueEntityInterface
+    public function flush(QueueEntityInterface $entity = null): QueueEntityInterface
     {
         $this->repository->flush($entity);
 
