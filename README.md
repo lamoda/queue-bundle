@@ -261,7 +261,7 @@ $container->get('queue.publisher')->publish($process);
 
 ## How to rerun queues
 
-If you want to rerun queue, throw `Lamoda\Bundle\QueueBundle\Exception\RuntimeException`.
+If you want to rerun queue, throw `Lamoda\QueueBundle\Exception\RuntimeException`.
 
 If you want mark queue as failed, throw any another kind of exception.
 
@@ -279,7 +279,7 @@ class SendNotificationHandler implements HandlerInterface
         
         // Rerun queue
         if ($rerun === true) {
-            throw new Lamoda\Bundle\QueueBundle\Exception\RuntimeException('Error message');
+            throw new Lamoda\QueueBundle\Exception\RuntimeException('Error message');
         }
         
         // Mark queue as failed
