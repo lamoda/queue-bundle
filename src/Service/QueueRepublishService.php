@@ -32,41 +32,44 @@ class QueueRepublishService
 
     public function republishQueues(int $batchSize): bool
     {
-        $this->queueService->beginTransaction();
+        $republishedQueueIds = [];
+        do {
+            $this->queueService->beginTransaction();
 
-        try {
-            $republishedQueueIds = [];
-            do {
+            try {
                 $queues = $this->queueService->getToRepublish($batchSize);
                 if ($queues) {
                     foreach ($queues as $queue) {
                         $this->publisherFactory->republish($queue);
-                        $this->queueService->flush($queue);
                         $republishedQueueIds[] = $queue->getId();
                     }
                 }
+
+                $this->queueService->flush();
                 $this->queueService->commit();
                 $this->publisherFactory->releaseAll();
-            } while (count($queues) === $batchSize);
+            } catch (Throwable $exception) {
+                if ($this->queueService->isTransactionActive()) {
+                    $this->queueService->rollback();
+                }
 
-            if ($republishedQueueIds) {
-                $this->logger->info(
-                    ConstantMessage::QUEUE_SUCCESS_REPUBLISH,
-                    ['queuesIds' => implode(', ', $republishedQueueIds)]
+                $this->logger->error(
+                    ConstantMessage::QUEUE_CAN_NOT_REPUBLISH,
+                    [
+                        'exception' => get_class($exception),
+                        'message' => $exception->getMessage(),
+                    ]
                 );
+
+                return false;
             }
-        } catch (Throwable $exception) {
-            $this->queueService->rollback();
+        } while (count($queues) === $batchSize);
 
-            $this->logger->error(
-                ConstantMessage::QUEUE_CAN_NOT_REPUBLISH,
-                [
-                    'exception' => get_class($exception),
-                    'message' => $exception->getMessage(),
-                ]
+        if ($republishedQueueIds) {
+            $this->logger->info(
+                ConstantMessage::QUEUE_SUCCESS_REPUBLISH,
+                ['queuesIds' => implode(', ', $republishedQueueIds)]
             );
-
-            return false;
         }
 
         return true;

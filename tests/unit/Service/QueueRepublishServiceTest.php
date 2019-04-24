@@ -40,7 +40,7 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('commit');
         $mockQueueService
-            ->expects($this->exactly(count($queueMessages)))
+            ->expects($this->once())
             ->method('flush');
         $mockQueueService
             ->expects($this->once())
@@ -81,6 +81,74 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @param array $queueMessages
+     *
+     * @dataProvider dataBatchRestoreQueues
+     */
+    public function testBatchRestoreQueues(array $queueMessages): void
+    {
+        $mockQueueService = $this->getMockQueueService(
+            [
+                'getToRepublish',
+                'beginTransaction',
+                'commit',
+                'flush',
+                'isTransactionActive',
+            ]
+        );
+        $mockQueueService
+            ->expects($this->exactly(4))
+            ->method('beginTransaction');
+        $mockQueueService
+            ->expects($this->exactly(4))
+            ->method('commit');
+        $mockQueueService
+            ->expects($this->exactly(4))
+            ->method('flush');
+
+        $mockQueueService
+            ->expects($this->exactly(4))
+            ->method('getToRepublish')
+            ->willReturnOnConsecutiveCalls(
+                $queueMessages,
+                $queueMessages,
+                $queueMessages,
+                []
+            );
+
+        $mockPublisherFactory = $this->getMockPublisherFactory(['republish', 'releaseAll']);
+        $mockPublisherFactory
+            ->expects($this->exactly(3))
+            ->method('republish');
+        $mockPublisherFactory
+            ->expects($this->exactly(4))
+            ->method('releaseAll');
+
+        $queueRepublishService = $this->createService($mockPublisherFactory, $mockQueueService);
+
+        $this->assertTrue($queueRepublishService->republishQueues(1));
+    }
+
+    /**
+     * @throws \Exception
+     *
+     * @return array
+     */
+    public function dataBatchRestoreQueues(): array
+    {
+        $queueEntity = $this->getQueueEntity();
+        Reflection::setProtectedProperty($queueEntity, 'id', 1);
+
+        return [
+            [
+                [
+                    $queueEntity,
+                ],
+            ],
+        ];
+    }
+
     public function testRestoreQueuesFailed(): void
     {
         $mockQueueService = $this->getMockQueueService(
@@ -104,6 +172,10 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
             ->method('flush');
         $mockQueueService
             ->expects($this->once())
+            ->method('isTransactionActive')
+            ->willReturn(true);
+        $mockQueueService
+            ->expects($this->once())
             ->method('rollback');
         $mockQueueService
             ->expects($this->once())
@@ -112,6 +184,77 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
         $queueRepublishService = $this->createService($this->getMockPublisherFactory(), $mockQueueService);
 
         $this->assertFalse($queueRepublishService->republishQueues(5));
+    }
+
+    /**
+     * @param array $queueMessages
+     *
+     * @dataProvider dataRestoreQueuesFailedOnPublisherReleaseFailed
+     */
+    public function testRestoreQueuesFailedOnPublisherReleaseFailed(array $queueMessages): void
+    {
+        $mockQueueService = $this->getMockQueueService(
+            [
+                'getToRepublish',
+                'beginTransaction',
+                'commit',
+                'flush',
+                'isTransactionActive',
+                'rollback',
+            ]
+        );
+        $mockQueueService
+            ->expects($this->once())
+            ->method('beginTransaction');
+        $mockQueueService
+            ->expects($this->once())
+            ->method('commit');
+        $mockQueueService
+            ->expects($this->once())
+            ->method('flush');
+        $mockQueueService
+            ->expects($this->once())
+            ->method('isTransactionActive')
+            ->willReturn(false);
+        $mockQueueService
+            ->expects($this->never())
+            ->method('rollback');
+        $mockQueueService
+            ->expects($this->once())
+            ->method('getToRepublish')
+            ->willReturn($queueMessages);
+
+        $publisherFactory = $this->getMockPublisherFactory(['republish', 'releaseAll']);
+        $publisherFactory
+            ->expects($this->once())
+            ->method('releaseAll')
+            ->will($this->throwException(new \Exception('Something broken')));
+
+        $queueRepublishService = $this->createService($publisherFactory, $mockQueueService);
+
+        $this->assertFalse($queueRepublishService->republishQueues(5));
+    }
+
+    /**
+     * @throws \Exception
+     *
+     * @return array
+     */
+    public function dataRestoreQueuesFailedOnPublisherReleaseFailed(): array
+    {
+        $queueEntity = $this->getQueueEntity();
+        $queueEntity2 = $this->getQueueEntity();
+        Reflection::setProtectedProperty($queueEntity, 'id', 1);
+        Reflection::setProtectedProperty($queueEntity2, 'id', 2);
+
+        return [
+            [
+                [
+                    $queueEntity,
+                    $queueEntity2,
+                ],
+            ],
+        ];
     }
 
     /**
