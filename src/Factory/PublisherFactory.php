@@ -7,6 +7,7 @@ namespace Lamoda\QueueBundle\Factory;
 use Lamoda\QueueBundle\ConstantMessage;
 use Lamoda\QueueBundle\Entity\QueueEntityInterface;
 use Lamoda\QueueBundle\Exception\RuntimeException;
+use Lamoda\QueueBundle\Exception\UnexpectedValueException;
 use Lamoda\QueueBundle\Publisher;
 use Lamoda\QueueBundle\QueueInterface;
 use Lamoda\QueueBundle\Service\DelayService;
@@ -67,6 +68,11 @@ class PublisherFactory
         return $this->publishers[$exchangeName];
     }
 
+    /**
+     * @param QueueInterface $queueable
+     *
+     * @throws UnexpectedValueException
+     */
     public function publish(QueueInterface $queueable): void
     {
         $exchangeName = $queueable->getExchange();

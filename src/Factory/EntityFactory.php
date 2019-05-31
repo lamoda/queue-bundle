@@ -6,6 +6,7 @@ namespace Lamoda\QueueBundle\Factory;
 
 use JMS\Serializer\SerializerInterface;
 use Lamoda\QueueBundle\Entity\QueueEntityInterface;
+use Lamoda\QueueBundle\Exception\UnexpectedValueException;
 use Lamoda\QueueBundle\QueueInterface;
 
 class EntityFactory implements EntityFactoryInterface
@@ -22,6 +23,13 @@ class EntityFactory implements EntityFactoryInterface
         $this->entityClass = $entityClass;
     }
 
+    /**
+     * @param QueueInterface $queueable
+     *
+     * @throws UnexpectedValueException
+     *
+     * @return QueueEntityInterface
+     */
     public function createQueue(QueueInterface $queueable): QueueEntityInterface
     {
         $name = $queueable->getQueue();
@@ -29,8 +37,15 @@ class EntityFactory implements EntityFactoryInterface
         $jobName = get_class($queueable);
         $data = $this->serializer->serialize($queueable, 'json');
 
+        $data = json_decode($data, true);
+        $jsonErrorCode = json_last_error();
+
+        if (JSON_ERROR_NONE !== $jsonErrorCode) {
+            throw new UnexpectedValueException('json_decode error: ' . json_last_error_msg(), $jsonErrorCode);
+        }
+
         /** @var QueueEntityInterface $queueEntity */
-        $queueEntity = new $this->entityClass($name, $exchange, $jobName, json_decode($data, true));
+        $queueEntity = new $this->entityClass($name, $exchange, $jobName, $data);
 
         if (null !== $queueable->getScheduleAt()) {
             $queueEntity->setScheduled($queueable->getScheduleAt());
