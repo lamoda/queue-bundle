@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Lamoda\QueueBundle;
 
 use Lamoda\QueueBundle\Entity\QueueEntityInterface;
+use Lamoda\QueueBundle\Exception\UnexpectedValueException;
 use Lamoda\QueueBundle\Service\DelayService;
 use Lamoda\QueueBundle\Service\QueueService;
 use OldSound\RabbitMqBundle\RabbitMq\Producer;
@@ -40,6 +41,13 @@ class Publisher
         $this->delayService = $delayService;
     }
 
+    /**
+     * @param QueueInterface $queueable
+     *
+     * @throws UnexpectedValueException
+     *
+     * @return Publisher
+     */
     public function prepareJobForPublish(QueueInterface $queueable): self
     {
         $this->prepareQueueForPublish(

@@ -6,6 +6,7 @@ namespace Lamoda\QueueBundle\Tests\Unit\Factory;
 
 use JMS\Serializer\SerializerInterface;
 use Lamoda\QueueBundle\Entity\QueueEntityInterface;
+use Lamoda\QueueBundle\Exception\UnexpectedValueException;
 use Lamoda\QueueBundle\Factory\EntityFactory;
 use Lamoda\QueueBundle\Job\AbstractJob;
 use Lamoda\QueueBundle\Tests\Unit\Job\StubJob;
@@ -57,6 +58,21 @@ class EntityFactoryTest extends PHPUnit_Framework_TestCase
                 })(),
             ],
         ];
+    }
+
+    public function testJsonDecodeError(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionCode(4);
+        $this->expectExceptionMessage('json_decode error: Syntax error');
+
+        $serializer = $this->getJMSSerializer(['serialize']);
+        $serializer->expects($this->once())
+            ->method('serialize')
+            ->willReturn('abrakadabra');
+
+        $factory = $this->createFactory($serializer);
+        $factory->createQueue(new StubJob(1));
     }
 
     private function createFactory(SerializerInterface $serializer): EntityFactory

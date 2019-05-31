@@ -122,6 +122,13 @@ class QueueService
         return $this->repository->getToRepublish($limit, $offset);
     }
 
+    /**
+     * @param QueueInterface $queueable
+     *
+     * @throws UnexpectedValueException
+     *
+     * @return QueueEntityInterface
+     */
     public function createQueue(QueueInterface $queueable): QueueEntityInterface
     {
         return $this->save($this->entityFactory->createQueue($queueable));

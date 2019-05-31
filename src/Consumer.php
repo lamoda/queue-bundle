@@ -63,9 +63,14 @@ class Consumer implements ConsumerInterface
      */
     public function execute(AMQPMessage $message): int
     {
-        $data = json_decode($message->body, true);
-
         try {
+            $data = json_decode($message->body, true);
+            $jsonErrorCode = json_last_error();
+
+            if (JSON_ERROR_NONE !== $jsonErrorCode) {
+                throw new UnexpectedValueException('json_decode error: ' . json_last_error_msg(), $jsonErrorCode);
+            }
+
             if (!isset($data['id'])) {
                 throw new UnexpectedValueException(ConstantMessage::AMQP_DATA_DAMAGED);
             }

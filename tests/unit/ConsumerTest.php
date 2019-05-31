@@ -150,10 +150,17 @@ class ConsumerTest extends Unit
         $this->assertEquals($result, $mockConsumer->execute($message));
     }
 
-    public function dataExecuteBrokenMessage(): array
+    public function dataExecute(): array
     {
+        $id = 1;
+
         return [
-            [$this->getMessage(['name' => 'name'])],
+            [
+                $this->getQueue(),
+                $this->getMessage(json_encode(['id' => $id])),
+                Consumer::MSG_ACK,
+                $id,
+            ],
         ];
     }
 
@@ -164,11 +171,12 @@ class ConsumerTest extends Unit
      *
      * @dataProvider dataExecuteBrokenMessage()
      */
-    public function testExecuteBrokenMessage(AMQPMessage $message): void
+    public function testExecuteBrokenMessage(AMQPMessage $message, string $expectedErrorMessage): void
     {
         $mockLogger = $this->getMockLogger(['alert']);
         $mockLogger->expects($this->once())
-            ->method('alert');
+            ->method('alert')
+            ->with($expectedErrorMessage);
 
         $mockConsumer = $this->getMockConsumer(['doExecute']);
 
@@ -179,16 +187,16 @@ class ConsumerTest extends Unit
         $this->assertEquals($mockConsumer::MSG_REJECT, $mockConsumer->execute($message));
     }
 
-    public function dataExecute(): array
+    public function dataExecuteBrokenMessage(): array
     {
-        $id = 1;
-
         return [
             [
-                $this->getQueue(),
-                $this->getMessage(['id' => $id]),
-                Consumer::MSG_ACK,
-                $id,
+                $this->getMessage(json_encode(['name' => 'name'])),
+                'Data was damaged. Remove message from queue',
+            ],
+            [
+                $this->getMessage('abrakadabra'),
+                'json_decode error: Syntax error',
             ],
         ];
     }
@@ -255,7 +263,7 @@ class ConsumerTest extends Unit
         return $queue;
     }
 
-    protected function getMessage(array $data = ['id' => 1]): AMQPMessage
+    protected function getMessage(string $data = '{"id": 1}'): AMQPMessage
     {
         /** @var \PhpAmqpLib\Channel\AMQPChannel | \PHPUnit_Framework_MockObject_MockObject $channelMock */
         $channelMock = $this->getMockBuilder(AMQPChannel::class)
@@ -272,7 +280,7 @@ class ConsumerTest extends Unit
             'channel' => $channelMock,
             'delivery_tag' => uniqid(),
         ];
-        $message->setBody(json_encode($data));
+        $message->setBody($data);
 
         return $message;
     }
