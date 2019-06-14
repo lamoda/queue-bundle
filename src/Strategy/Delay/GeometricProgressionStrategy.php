@@ -22,7 +22,7 @@ class GeometricProgressionStrategy implements DelayStrategyInterface
 
     public function generateInterval(int $iteration): DateInterval
     {
-        $newIntervalSec = $this->startInterval * ($this->multiplier ** ($iteration - 1));
+        $newIntervalSec = (int) ceil($this->startInterval * ($this->multiplier ** ($iteration - 1)));
 
         return new DateInterval('PT' . $newIntervalSec . 'S');
     }
