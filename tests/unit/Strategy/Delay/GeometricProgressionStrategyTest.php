@@ -33,6 +33,7 @@ class GeometricProgressionStrategyTest extends Unit
             [4, 1, 2, 3],
             [4, 2, 2, 2],
             [480, 60, 2, 4],
+            'float multiplier' => [938, 60, 2.5, 4],
         ];
     }
 }
