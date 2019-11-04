@@ -117,8 +117,6 @@ class Publisher
                         'trace' => $e->getTraceAsString(),
                     ]
                 );
-
-                continue;
             }
         }
     }

@@ -42,31 +42,34 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param QueueEntity $queue
+     *
      * @throws \Exception
+     *
+     * @dataProvider dataGetToProcess()
      */
-    public function testGetToProcess(): void
+    public function testGetToProcess(QueueEntity $queue): void
     {
-        $queue = new QueueEntity('queue', 'exchange', 'ClassJob', ['id' => 1]);
-        $queue->setNew();
-
         $queueRepository = $this->getQueueRepository();
         $queueRepository
             ->expects($this->once())
-            ->method('beginTransaction');
-        $queueRepository
-            ->expects($this->once())
-            ->method('findOneBy')
+            ->method('find')
             ->willReturn($queue);
         $queueRepository
             ->expects($this->once())
             ->method('save')
             ->with($queue);
-        $queueRepository
-            ->expects($this->once())
-            ->method('commit');
 
         $this->assertEquals($queue, $this->createService($queueRepository)->getToProcess(1));
         $this->assertEquals(QueueEntity::STATUS_IN_PROGRESS_TITLE, $queue->getStatusAsString());
+    }
+
+    public function dataGetToProcess(): array
+    {
+        return [
+            'new status' => [(new QueueEntity('queue', 'exchange', 'ClassJob', ['id' => 1]))->setNew()],
+            'in progress status' => [(new QueueEntity('queue', 'exchange', 'ClassJob', ['id' => 1]))->setInProgress()],
+        ];
     }
 
     /**
@@ -83,16 +86,11 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
         $this->expectExceptionMessage($expectedExceptionMessage);
 
         $queueRepository = $this->getQueueRepository();
+
         $queueRepository
             ->expects($this->once())
-            ->method('beginTransaction');
-        $queueRepository
-            ->expects($this->once())
-            ->method('findOneBy')
+            ->method('find')
             ->willReturn($queueEntity);
-        $queueRepository
-            ->expects($this->once())
-            ->method('rollback');
 
         $this->createService($queueRepository)->getToProcess(1);
     }
@@ -106,7 +104,7 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
             ],
             'Status not NEW' => [
                 new QueueEntity('queue', 'exchange', 'ClassJob', ['id' => 1]),
-                'The queue "queue" with job "ClassJob" was not found in status "new". Actual status is "initial"',
+                'The queue "queue" with job "ClassJob" was not found in suitable status. Actual status is "initial"',
             ],
         ];
     }
@@ -126,18 +124,12 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
         $queueRepository = $this->getQueueRepository();
         $queueRepository
             ->expects($this->once())
-            ->method('beginTransaction');
-        $queueRepository
-            ->expects($this->once())
-            ->method('findOneBy')
+            ->method('find')
             ->willReturn($queue);
         $queueRepository
             ->expects($this->once())
             ->method('save')
             ->with($queue);
-        $queueRepository
-            ->expects($this->once())
-            ->method('commit');
 
         $attemptsReachedEvent = new QueueAttemptsReachedEvent($queue);
 
@@ -184,11 +176,6 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
             ->willReturn($queue);
 
         $queueRepository = $this->getQueueRepository();
-        $queueRepository
-            ->expects($this->once())
-            ->method('save')
-            ->with($queue)
-            ->willReturnArgument(0);
 
         $this->assertEquals(
             $queue,
@@ -232,10 +219,7 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
     {
         return $this->getMockQueueRepository(
             [
-                'beginTransaction',
-                'rollback',
-                'commit',
-                'findOneBy',
+                'find',
                 'getToRestore',
                 'save',
                 'isTransactionActive',
