@@ -30,6 +30,12 @@ class QueueService
     /** @var int */
     protected $maxAttempts;
 
+    /** @var array */
+    protected $queueSuitableStatuses = [
+        QueueEntityMappedSuperclass::STATUS_NEW,
+        QueueEntityMappedSuperclass::STATUS_IN_PROGRESS
+    ];
+
     public function __construct(
         QueueRepository $repository,
         EntityFactoryInterface $entityFactory,
@@ -64,45 +70,33 @@ class QueueService
      */
     public function getToProcess(int $id): QueueEntityInterface
     {
-        $this->repository->beginTransaction();
+        $queueEntity = $this->repository->find($id);
 
-        try {
-            $queueEntity = $this->repository->findOneBy(
-                [
-                    'id' => $id,
-                ]
-            );
-
-            if (!($queueEntity instanceof QueueEntityInterface)) {
-                throw new UnexpectedValueException(sprintf(ConstantMessage::QUEUE_ENTITY_NOT_FOUND, $id));
-            }
-
-            if (QueueEntityMappedSuperclass::STATUS_NEW !== $queueEntity->getStatus()) {
-                throw new UnexpectedValueException(sprintf(
-                    ConstantMessage::QUEUE_ENTITY_NOT_FOUND_IN_STATUS_NEW,
-                    $queueEntity->getName(),
-                    $queueEntity->getJobName(),
-                    $queueEntity->getStatusAsString()
-                ));
-            }
-
-            $attemptsReached = $queueEntity->isMaxAttemptsReached($this->maxAttempts);
-            if ($attemptsReached) {
-                $queueEntity->setAttemptsReached();
-            } else {
-                $queueEntity->setInProgress();
-            }
-
-            $this->repository->save($queueEntity);
-            $this->repository->commit();
-        } catch (Exception $exception) {
-            $this->repository->rollback();
-
-            throw $exception;
+        if (!($queueEntity instanceof QueueEntityInterface)) {
+            throw new UnexpectedValueException(sprintf(ConstantMessage::QUEUE_ENTITY_NOT_FOUND, $id));
         }
+
+        if (!in_array($queueEntity->getStatus(), $this->queueSuitableStatuses, true)) {
+            throw new UnexpectedValueException(sprintf(
+                ConstantMessage::QUEUE_ENTITY_NOT_FOUND_IN_SUITABLE_STATUS,
+                $queueEntity->getName(),
+                $queueEntity->getJobName(),
+                $queueEntity->getStatusAsString()
+            ));
+        }
+
+        $attemptsReached = $queueEntity->isMaxAttemptsReached($this->maxAttempts);
+        if ($attemptsReached) {
+            $queueEntity->setAttemptsReached();
+        } else {
+            $queueEntity->setInProgress();
+        }
+
+        $this->repository->save($queueEntity);
 
         if ($attemptsReached) {
             $this->eventDispatcher->dispatch(QueueAttemptsReachedEvent::NAME, new QueueAttemptsReachedEvent($queueEntity));
+
             throw new AttemptsReachedException(sprintf(ConstantMessage::QUEUE_ATTEMPTS_REACHED, $queueEntity->getName()));
         }
 
@@ -131,7 +125,7 @@ class QueueService
      */
     public function createQueue(QueueInterface $queueable): QueueEntityInterface
     {
-        return $this->save($this->entityFactory->createQueue($queueable));
+        return $this->entityFactory->createQueue($queueable);
     }
 
     public function flush(QueueEntityInterface $entity = null): void

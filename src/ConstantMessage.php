@@ -20,10 +20,10 @@ class ConstantMessage
 
     public const PUBLISHER_NOT_FOUND = 'Publisher `%s` not found';
 
-    public const QUEUE_ENTITY_NOT_FOUND = 'The queue with id "%d" was not found';
-    public const QUEUE_ENTITY_NOT_FOUND_IN_STATUS_NEW = 'The queue "%s" with job "%s" was not found in status "new". Actual status is "%s"';
-    public const QUEUE_ATTEMPTS_REACHED = 'The queue "%s" has reached it\'s attempts count maximum';
-    public const QUEUE_CAN_NOT_REQUEUE = 'Can not requeue messages';
-    public const QUEUE_CAN_NOT_REPUBLISH = 'Can not republish messages';
-    public const QUEUE_SUCCESS_REPUBLISH = 'Queue republish successfully completed';
+    public const QUEUE_ENTITY_NOT_FOUND                    = 'The queue with id "%d" was not found';
+    public const QUEUE_ENTITY_NOT_FOUND_IN_SUITABLE_STATUS = 'The queue "%s" with job "%s" was not found in suitable status. Actual status is "%s"';
+    public const QUEUE_ATTEMPTS_REACHED                    = 'The queue "%s" has reached it\'s attempts count maximum';
+    public const QUEUE_CAN_NOT_REQUEUE                     = 'Can not requeue messages';
+    public const QUEUE_CAN_NOT_REPUBLISH                   = 'Can not republish messages';
+    public const QUEUE_SUCCESS_REPUBLISH                   = 'Queue republish successfully completed';
 }

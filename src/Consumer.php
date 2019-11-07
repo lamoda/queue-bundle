@@ -80,11 +80,7 @@ class Consumer implements ConsumerInterface
             return $this->doExecute(
                 $this->queueService->getToProcess($data['id'])
             );
-        } catch (UnexpectedValueException $exception) {
-            $this->logger->alert($exception->getMessage(), $this->getMessageLogParams($message));
-
-            return self::MSG_REJECT;
-        } catch (AttemptsReachedException $exception) {
+        } catch (UnexpectedValueException | AttemptsReachedException $exception) {
             $this->logger->alert($exception->getMessage(), $this->getMessageLogParams($message));
 
             return self::MSG_REJECT;
