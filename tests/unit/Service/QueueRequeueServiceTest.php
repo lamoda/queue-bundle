@@ -11,7 +11,7 @@ use Lamoda\QueueBundle\Service\QueueService;
 use Lamoda\QueueBundle\Tests\Unit\QueueCommonServicesTrait;
 use Lamoda\QueueBundle\Tests\Unit\QueueEntity;
 use PHPUnit_Framework_TestCase;
-use Symfony\Component\HttpKernel\Tests\Logger;
+use Symfony\Component\HttpKernel\Log\Logger;
 
 class QueueRequeueServiceTest extends PHPUnit_Framework_TestCase
 {

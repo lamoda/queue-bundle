@@ -11,7 +11,7 @@ use Lamoda\QueueBundle\Tests\Unit\QueueCommonServicesTrait;
 use Lamoda\QueueBundle\Tests\Unit\QueueEntity;
 use Lamoda\QueueBundle\Tests\Unit\Reflection;
 use PHPUnit_Framework_TestCase;
-use Symfony\Component\HttpKernel\Tests\Logger;
+use Symfony\Component\HttpKernel\Log\Logger;
 
 class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
 {
