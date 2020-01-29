@@ -8,12 +8,16 @@ use DateInterval;
 use DateTime;
 use Lamoda\QueueBundle\Entity\QueueEntityInterface;
 use Lamoda\QueueBundle\Service\DelayService;
-use Lamoda\QueueBundle\Strategy\Delay\DelayStrategyInterface;
+use Lamoda\QueueBundle\Service\DelayStrategyResolver;
 use Lamoda\QueueBundle\Tests\Unit\QueueEntity;
+use Lamoda\QueueBundle\Tests\Unit\SymfonyMockTrait;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\LoggerInterface;
 
 class DelayServiceTest extends PHPUnit_Framework_TestCase
 {
+    use SymfonyMockTrait, DelayStrategyResolverTrait;
+
     /**
      * @param QueueEntityInterface $queue
      * @param QueueEntityInterface $expectedQueue
@@ -24,12 +28,13 @@ class DelayServiceTest extends PHPUnit_Framework_TestCase
     public function testDelayQueue(
         QueueEntityInterface $queue,
         QueueEntityInterface $expectedQueue,
-        DateTime $dateTime
+        DateTime $dateTime,
+        DelayStrategyResolver $strategyService,
+        LoggerInterface $logger
     ): void {
-        $strategy = $this->createStrategy();
         /** @var DelayService | \PHPUnit_Framework_MockObject_MockObject $delayService */
         $delayService = $this->getMockBuilder(DelayService::class)
-            ->setConstructorArgs([$strategy])
+            ->setConstructorArgs([$strategyService, $logger])
             ->setMethods(['getStartDateTime'])
             ->getMock();
         $delayService->method('getStartDateTime')
@@ -40,24 +45,47 @@ class DelayServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return array
      * @throws \Exception
      *
-     * @return array
      */
-    public function dataDelayQueue(): array
+    public function dataDelayQueue(): \Generator
     {
-        $strategy = $this->createStrategy();
-        $dateTime = new DateTime();
-        $queue = $this->createQueue();
-        $expected = clone $queue;
-        $expected->setWaiting($dateTime->add($strategy::getInterval()));
+        $strategyService = $this->createDelayStrategyResolver([]);
+        $logger          = $this->getMockLogger();
+        $dateTime        = new DateTime();
+        $queue           = $this->createQueue();
+        $expected        = clone $queue;
+        $expected->setWaiting($dateTime->add(new DateInterval('PT60S')));
 
-        return [
-            [
-                $queue,
-                $expected,
-                $dateTime,
-            ],
+        yield 'With valid strategy key' => [
+            $queue,
+            $expected,
+            $dateTime,
+            $strategyService,
+            $logger,
+        ];
+
+        $strategyService = $this->createDelayStrategyResolver([$queue->getName() => 'unknown_strategy_key']);
+        $logger          = $this->getMockLogger(['warning']);
+        $logger->expects($this->once())
+            ->method('warning')
+            ->with(
+                'Delay strategy with key: unknown_strategy_key doesn\'t exist', [
+                'queue_name' => $queue->getName(),
+            ]
+            );
+        $dateTime = new DateTime();
+        $queue    = $this->createQueue();
+        $expected = clone $queue;
+        $expected->setWaiting($dateTime->add(new DateInterval('PT60S')));
+
+        yield 'With invalid strategy key warning' => [
+            $queue,
+            $expected,
+            $dateTime,
+            $strategyService,
+            $logger,
         ];
     }
 
@@ -66,18 +94,4 @@ class DelayServiceTest extends PHPUnit_Framework_TestCase
         return new QueueEntity('queue', 'exchange', 'ClassJob', []);
     }
 
-    private function createStrategy()
-    {
-        return new class() implements DelayStrategyInterface {
-            public function generateInterval(int $iteration): DateInterval
-            {
-                return static::getInterval();
-            }
-
-            public static function getInterval(): DateInterval
-            {
-                return new DateInterval('PT1M');
-            }
-        };
-    }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lamoda\QueueBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -40,6 +41,22 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end();
 
+        $this->addQueues($rootNode);
+
         return $treeBuilder;
+    }
+
+
+    protected function addQueues(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('queues')
+                ->canBeUnset()
+                ->useAttributeAsKey('key')
+                ->treatNullLike(array())
+                ->prototype('scalar')->end()
+            ->end()
+        ;
     }
 }
