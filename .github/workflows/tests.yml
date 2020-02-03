@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches:
+    tags:
+  pull_request:
+
+
+jobs:
+    build:
+      runs-on: ${{ matrix.os }}
+      strategy:
+        fail-fast: false
+        matrix:
+          php: [7.1, 7.2, 7.3, 7.4]
+          os: [ubuntu-18.04]
+      name: PHP v${{ matrix.php }} Test ${{ matrix.env }} on ${{ matrix.os }}
+
+      steps:
+      - uses: actions/checkout@v1
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@1.7.4
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: json, mbstring, pdo
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer --prefer-dist install
+
+      - name: Run tests
+        run: make test-unit
+
+      - name: Run cs-fixer
+        run: make php-cs-fix-diff
+        # Remove after executing command make php-cs-fix and commit changed files
+        continue-on-error: true
