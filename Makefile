@@ -6,5 +6,8 @@ php-cs-check:
 php-cs-fix:
 	$(WORKING_DIR)/vendor/bin/php-cs-fixer fix
 
+php-cs-fix-diff:
+	$(WORKING_DIR)/vendor/bin/php-cs-fixer fix --dry-run --diff
+
 test-unit:
 	./vendor/bin/codecept run unit
