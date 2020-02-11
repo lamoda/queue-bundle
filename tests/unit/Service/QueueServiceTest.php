@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Lamoda\QueueBundle\Tests\Unit\Service;
 
+use DateTime;
 use Lamoda\QueueBundle\Entity\QueueRepository;
 use Lamoda\QueueBundle\Event\QueueAttemptsReachedEvent;
 use Lamoda\QueueBundle\Exception\AttemptsReachedException;
 use Lamoda\QueueBundle\Exception\UnexpectedValueException;
 use Lamoda\QueueBundle\Factory\EntityFactory;
+use Lamoda\QueueBundle\Publisher;
+use Lamoda\QueueBundle\Service\DelayService;
 use Lamoda\QueueBundle\Service\QueueService;
 use Lamoda\QueueBundle\Tests\Unit\Job\StubJob;
 use Lamoda\QueueBundle\Tests\Unit\QueueCommonServicesTrait;
 use Lamoda\QueueBundle\Tests\Unit\QueueEntity;
 use Lamoda\QueueBundle\Tests\Unit\SymfonyMockTrait;
+use OldSound\RabbitMqBundle\RabbitMq\Producer;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class QueueServiceTest extends PHPUnit_Framework_TestCase
