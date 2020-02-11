@@ -183,6 +183,39 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSavingScheduledQueue(): void
+    {
+        $dateTime = new DateTime();
+        $job = new StubJob(1);
+        $queue = new QueueEntity('queue', 'exchange', StubJob::class, ['id' => 1]);
+        $queue->setScheduled($dateTime);
+
+        $queueRepository = $this->getQueueRepository();
+        $queueRepository
+            ->expects($this->once())
+            ->method('save')
+            ->with($queue)
+            ->willReturnArgument(0);
+
+        $entityFactory = $this->getEntityFactory();
+        $entityFactory
+            ->expects($this->once()) #at least once
+            ->method('createQueue')
+            ->willReturn($queue);
+
+        $queueService = $this->createService($queueRepository, $entityFactory);
+        $publisher = new Publisher(
+            $this->createMock(Producer::class),
+            $queueService,
+            new NullLogger(),
+            $this->createMock(DelayService::class)
+        );
+
+        $createdQueue = $queueService->createQueue($job);
+        $publisher->prepareQueueForPublish($createdQueue);
+        $publisher->release();
+    }
+    
     public function testIsTransactionActive(): void
     {
         $expected = true;
