@@ -126,6 +126,7 @@ class QueueService
     public function createQueue(QueueInterface $queueable): QueueEntityInterface
     {
         $queue = $this->entityFactory->createQueue($queueable);
+
         return $this->save($queue);
     }
 
