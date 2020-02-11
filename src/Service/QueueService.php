@@ -33,7 +33,7 @@ class QueueService
     /** @var array */
     protected $queueSuitableStatuses = [
         QueueEntityMappedSuperclass::STATUS_NEW,
-        QueueEntityMappedSuperclass::STATUS_IN_PROGRESS
+        QueueEntityMappedSuperclass::STATUS_IN_PROGRESS,
     ];
 
     public function __construct(
@@ -49,7 +49,6 @@ class QueueService
     }
 
     /**
-     * @param int      $limit
      * @param int | null $offset
      *
      * @throws \Doctrine\ORM\TransactionRequiredException
@@ -62,11 +61,7 @@ class QueueService
     }
 
     /**
-     * @param int $id
-     *
      * @throws Exception
-     *
-     * @return QueueEntityInterface
      */
     public function getToProcess(int $id): QueueEntityInterface
     {
@@ -104,9 +99,6 @@ class QueueService
     }
 
     /**
-     * @param int      $limit
-     * @param int|null $offset
-     *
      * @throws \Doctrine\ORM\TransactionRequiredException
      *
      * @return array|QueueEntityInterface[]
@@ -117,11 +109,7 @@ class QueueService
     }
 
     /**
-     * @param QueueInterface $queueable
-     *
      * @throws UnexpectedValueException
-     *
-     * @return QueueEntityInterface
      */
     public function createQueue(QueueInterface $queueable): QueueEntityInterface
     {

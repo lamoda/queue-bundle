@@ -12,11 +12,7 @@ use Symfony\Component\DependencyInjection\Loader;
 class LamodaQueueExtension extends Extension
 {
     /**
-     * @param array            $configs
-     *
      * @throws \Exception
-     *
-     * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container): void
     {

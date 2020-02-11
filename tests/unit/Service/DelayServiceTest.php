@@ -15,10 +15,6 @@ use PHPUnit_Framework_TestCase;
 class DelayServiceTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @param QueueEntityInterface $queue
-     * @param QueueEntityInterface $expectedQueue
-     * @param DateTime             $dateTime
-     *
      * @dataProvider dataDelayQueue
      */
     public function testDelayQueue(
@@ -41,8 +37,6 @@ class DelayServiceTest extends PHPUnit_Framework_TestCase
 
     /**
      * @throws \Exception
-     *
-     * @return array
      */
     public function dataDelayQueue(): array
     {

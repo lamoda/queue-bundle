@@ -42,8 +42,6 @@ class Publisher
     }
 
     /**
-     * @param QueueInterface $queueable
-     *
      * @throws UnexpectedValueException
      *
      * @return Publisher

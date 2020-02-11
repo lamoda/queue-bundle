@@ -19,9 +19,6 @@ class EntityFactoryTest extends PHPUnit_Framework_TestCase
     use SymfonyMockTrait;
 
     /**
-     * @param AbstractJob          $job
-     * @param QueueEntityInterface $expected
-     *
      * @dataProvider dataCreateQueue()
      */
     public function testCreateQueue(AbstractJob $job, QueueEntityInterface $expected): void

@@ -18,8 +18,6 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
     use QueueCommonServicesTrait;
 
     /**
-     * @param array $queueMessages
-     *
      * @dataProvider dataRestoreQueues
      */
     public function testRestoreQueues(array $queueMessages): void
@@ -61,8 +59,6 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
 
     /**
      * @throws \Exception
-     *
-     * @return array
      */
     public function dataRestoreQueues(): array
     {
@@ -82,8 +78,6 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array $queueMessages
-     *
      * @dataProvider dataBatchRestoreQueues
      */
     public function testBatchRestoreQueues(array $queueMessages): void
@@ -132,8 +126,6 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
 
     /**
      * @throws \Exception
-     *
-     * @return array
      */
     public function dataBatchRestoreQueues(): array
     {
@@ -187,8 +179,6 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array $queueMessages
-     *
      * @dataProvider dataRestoreQueuesFailedOnPublisherReleaseFailed
      */
     public function testRestoreQueuesFailedOnPublisherReleaseFailed(array $queueMessages): void
@@ -237,8 +227,6 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
 
     /**
      * @throws \Exception
-     *
-     * @return array
      */
     public function dataRestoreQueuesFailedOnPublisherReleaseFailed(): array
     {
@@ -258,14 +246,7 @@ class QueueRepublishServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $jobName
-     * @param string $exchange
-     * @param string $queueName
-     * @param array  $data
-     *
      * @throws \Exception
-     *
-     * @return QueueEntity
      */
     protected function getQueueEntity(
         string $jobName = 'someJobName',

@@ -16,9 +16,6 @@ class PublisherTest extends Unit
     use SymfonyMockTrait;
 
     /**
-     * @param QueueEntityInterface $queue
-     * @param QueueEntityInterface $queueExpected
-     *
      * @throws \Exception
      *
      * @dataProvider dataRelease
@@ -59,8 +56,6 @@ class PublisherTest extends Unit
     }
 
     /**
-     * @param QueueEntityInterface $queue
-     *
      * @throws \Exception
      *
      * @dataProvider dataReleaseWithDelay
@@ -97,11 +92,6 @@ class PublisherTest extends Unit
     }
 
     /**
-     * @param QueueEntityInterface $queue
-     * @param ErrorException       $exception
-     * @param QueueEntityInterface $queueWaiting
-     * @param DateTime             $dateTimeDelay
-     *
      * @throws \Exception
      *
      * @dataProvider dataReleaseException
@@ -156,8 +146,6 @@ class PublisherTest extends Unit
     }
 
     /**
-     * @return array
-     *
      * @throws \Exception
      */
     public function dataReleaseException(): array
@@ -179,8 +167,6 @@ class PublisherTest extends Unit
     }
 
     /**
-     * @return array
-     *
      * @throws \Exception
      */
     public function dataPublishQueue(): array
@@ -196,10 +182,6 @@ class PublisherTest extends Unit
     }
 
     /**
-     * @param QueueEntityInterface $queue
-     * @param string               $expectedBody
-     * @param string               $expectedRoutingKey
-     *
      * @throws \Exception
      *
      * @dataProvider dataPublishQueue()

@@ -18,8 +18,6 @@ class QueueRequeueServiceTest extends PHPUnit_Framework_TestCase
     use QueueCommonServicesTrait;
 
     /**
-     * @param array $queueMessages
-     *
      * @dataProvider dataRestoreQueues
      */
     public function testRestoreQueues(array $queueMessages): void
@@ -110,8 +108,6 @@ class QueueRequeueServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param QueueEntityInterface $queue
-     *
      * @dataProvider dataRequeue
      */
     public function testRequeue(QueueEntityInterface $queue): void

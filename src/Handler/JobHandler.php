@@ -30,8 +30,6 @@ class JobHandler implements HandlerInterface
     }
 
     /**
-     * @param string $jobName
-     *
      * @return object | HandlerInterface
      */
     protected function getHandler(string $jobName): HandlerInterface

@@ -20,8 +20,6 @@ class QueueConsumerCommandTest extends PHPUnit_Framework_TestCase
     use SymfonyMockTrait;
 
     /**
-     * @param string $name
-     *
      * @throws Exception
      *
      * @dataProvider dataExecute
@@ -70,9 +68,6 @@ class QueueConsumerCommandTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param int       $count
-     * @param Exception $exception
-     *
      * @throws Exception
      *
      * @dataProvider dataExecuteWithException
@@ -138,10 +133,6 @@ class QueueConsumerCommandTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param int       $count
-     * @param Exception $exception
-     * @param int       $timeOut
-     *
      * @throws Exception
      *
      * @dataProvider dataExecuteWithAlert

@@ -55,11 +55,7 @@ class Consumer implements ConsumerInterface
     }
 
     /**
-     * @param AMQPMessage $message
-     *
      * @throws \Exception
-     *
-     * @return int
      */
     public function execute(AMQPMessage $message): int
     {
