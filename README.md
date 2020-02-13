@@ -37,7 +37,7 @@ Symfony bundle for convenient work with queues. Currently it supports RabbitMQ.
        max_attempts: 5
        batch_size_per_requeue: 5
        batch_size_per_republish: 5
-       ## optional
+       ## optional (will use for default delay Geometric Progression Strategy)
        strategy_delay_geometric_progression_start_interval_sec: 60
        strategy_delay_geometric_progression_multiplier: 2
    ```
@@ -198,6 +198,47 @@ Symfony bundle for convenient work with queues. Currently it supports RabbitMQ.
             tags:
                 - { name: queue.handler, handle: App\Job\SendNotificationJob }
     ```
+
+1. Configure delay strategy parameters (optional)
+   
+   ```yaml
+   lamoda_queue:
+   ...
+       queues:
+           queue_one: 'delay_arithmetic_progression'
+           queue_two: 'delay_special_geometric_progression'
+   
+   # Settings of special behaviors for Delay strategies (optional)
+   services:
+     lamoda_queue.strategy.delay.arithmetic_progression:
+       class: Lamoda\QueueBundle\Strategy\Delay\ArithmeticProgressionStrategy
+       tags:
+         - { name: 'lamoda_queue_strategy', key: 'delay_arithmetic_progression' }
+       arguments:
+         - 60 # start_interval_sec parameter
+         - 1700 # multiplier parameter
+     
+    lamoda_queue.strategy.delay.geometric_progression:
+       class: Lamoda\QueueBundle\Strategy\Delay\GeometricProgressionStrategy
+       tags:
+         - { name: 'lamoda_queue_strategy', key: 'delay_special_geometric_progression' }
+       arguments:
+         - 70 # start_interval_sec parameter
+         - 4 # multiplier parameter
+
+   ```
+   In this block, you can config special delay behaviors for each queue. For this, you have to register new services that 
+   use one of several base strategies (ArithmeticProgressionStrategy, GeometricProgressionStrategy) or yours (for this you 
+   have to make Service Class that implements DelayStrategyInterface).
+   
+   Each strategy service has to have a tag with name `lamoda_queue_strategy` and unique `key`.
+   After this, you can use these `keys` for matching with queues in `lamoda_queue.queues` section.
+   
+   By default, use GeometricProgressionStrategy with params (their you can customize in `lamoda_queue` config section):
+   ```
+       strategy_delay_geometric_progression_start_interval_sec: 60
+       strategy_delay_geometric_progression_multiplier: 2
+   ```
 
 6. Add queue name in "codeception.yml" at `modules.config.AMQP.queues`
 
