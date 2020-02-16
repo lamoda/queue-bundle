@@ -65,13 +65,6 @@ services:
             - '@Lamoda\QueueBundle\Factory\EntityFactory'
             - '@event_dispatcher'
             - '%lamoda_queue.max_attempts%'
-    Lamoda\QueueBundle\Service\DelayService:
-        arguments:
-            - '@Lamoda\QueueBundle\Strategy\Delay\DelayStrategyInterface'
-    Lamoda\QueueBundle\Strategy\Delay\GeometricProgressionStrategy:
-        arguments:
-            - '%lamoda_queue.strategy_delay_geometric_progression_start_interval_sec%'
-            - '%lamoda_queue.strategy_delay_geometric_progression_multiplier%'
     Lamoda\QueueBundle\Command\QueueRepublishCommand:
         public: true
         arguments:
@@ -98,3 +91,17 @@ services:
         public: true
         tags:
             - { name: console.command }
+    Lamoda\QueueBundle\Service\DelayService:
+      arguments:
+        - '@Lamoda\QueueBundle\Service\DelayStrategyResolver'
+        - '@Psr\Log\LoggerInterface'
+    Lamoda\QueueBundle\Strategy\Delay\GeometricProgressionStrategy:
+      arguments:
+        - '%lamoda_queue.strategy_delay_geometric_progression_start_interval_sec%'
+        - '%lamoda_queue.strategy_delay_geometric_progression_multiplier%'
+      tags:
+        - { name: 'lamoda_queue_strategy', key: !php/const Lamoda\QueueBundle\Service\DelayStrategyResolver::DEFAULT_STRATEGY }
+    Lamoda\QueueBundle\Service\DelayStrategyResolver:
+        arguments:
+            - !tagged { tag: 'lamoda_queue_strategy', index_by: 'key' }
+            - '%lamoda_queue.queues_configuration%'

@@ -6,7 +6,7 @@ namespace Lamoda\QueueBundle\Strategy\Delay;
 
 use DateInterval;
 
-class GeometricProgressionStrategy implements DelayStrategyInterface
+class ArithmeticProgressionStrategy implements DelayStrategyInterface
 {
     /** @var int */
     private $startInterval;
@@ -22,7 +22,7 @@ class GeometricProgressionStrategy implements DelayStrategyInterface
 
     public function generateInterval(int $iteration): DateInterval
     {
-        $newIntervalSec = (int) ceil($this->startInterval * ($this->multiplier ** ($iteration - 1)));
+        $newIntervalSec = (int) ceil($this->startInterval + ($this->multiplier * ($iteration - 1)));
 
         return new DateInterval('PT' . $newIntervalSec . 'S');
     }

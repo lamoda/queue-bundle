@@ -29,5 +29,6 @@ class LamodaQueueExtension extends Extension
         $container->setParameter('lamoda_queue.strategy_delay_geometric_progression_start_interval_sec', $config['strategy_delay_geometric_progression_start_interval_sec']);
         $container->setParameter('lamoda_queue.strategy_delay_geometric_progression_multiplier', $config['strategy_delay_geometric_progression_multiplier']);
         $container->setParameter('lamoda_queue.command_unexpected_end_script_timeout', $config['command_unexpected_end_script_timeout']);
+        $container->setParameter('lamoda_queue.queues_configuration', $config['queues']);
     }
 }
