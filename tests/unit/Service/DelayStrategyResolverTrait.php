@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-
 namespace Lamoda\QueueBundle\Tests\Unit\Service;
-
 
 use Lamoda\QueueBundle\Service\DelayStrategyResolver;
 use Lamoda\QueueBundle\Strategy\Delay\ArithmeticProgressionStrategy;

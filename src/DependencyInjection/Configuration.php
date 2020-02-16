@@ -46,7 +46,6 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-
     protected function addQueues(ArrayNodeDefinition $node)
     {
         $node
@@ -54,7 +53,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('queues')
                 ->canBeUnset()
                 ->useAttributeAsKey('key')
-                ->treatNullLike(array())
+                ->treatNullLike([])
                 ->prototype('scalar')->end()
             ->end()
         ;

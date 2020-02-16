@@ -10,11 +10,6 @@ use Lamoda\QueueBundle\Strategy\Delay\ArithmeticProgressionStrategy;
 class ArithmeticProgressionStrategyTest extends Unit
 {
     /**
-     * @param int   $expectedDelay
-     * @param int   $startIntervalSec
-     * @param float $multiplier
-     * @param int   $attempt
-     *
      * @dataProvider dataGenerateDelay
      */
     public function testGenerateDelay(int $expectedDelay, int $startIntervalSec, float $multiplier, int $attempt): void

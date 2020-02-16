@@ -24,7 +24,7 @@ class DelayService
     public function __construct(DelayStrategyResolver $strategyService, LoggerInterface $logger)
     {
         $this->strategyService = $strategyService;
-        $this->logger          = $logger;
+        $this->logger = $logger;
     }
 
     public function delayQueue(QueueEntityInterface $queue): QueueEntityInterface
@@ -40,9 +40,9 @@ class DelayService
             $strategy = $this->strategyService->getDefaultStrategy();
         }
 
-        $iteration        = $queue->getAttempts() ?? 1;
+        $iteration = $queue->getAttempts() ?? 1;
         $newDelayInterval = $strategy->generateInterval($iteration);
-        $delayUntil       = $this->getStartDateTime()->add($newDelayInterval);
+        $delayUntil = $this->getStartDateTime()->add($newDelayInterval);
 
         $queue->setWaiting($delayUntil);
 
