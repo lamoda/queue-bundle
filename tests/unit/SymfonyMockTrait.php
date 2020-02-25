@@ -6,6 +6,7 @@ namespace Lamoda\QueueBundle\Tests\Unit;
 
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -53,15 +54,11 @@ trait SymfonyMockTrait
     }
 
     /**
-     * @param array $methods
-     *
      * @return Serializer | \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getJMSSerializer(array $methods = [])
+    protected function getJMSSerializer()
     {
-        return $this->getMockBuilder(Serializer::class)
-            ->disableOriginalConstructor()
-            ->setMethods($methods)
+        return $this->getMockBuilder(SerializerInterface::class)
             ->getMock();
     }
 

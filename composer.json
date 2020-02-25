@@ -10,7 +10,7 @@
     "ext-json": "*",
     "doctrine/doctrine-bundle": "^1.9 || ^2.0",
     "doctrine/orm": "~2.3",
-    "jms/serializer-bundle": "^2.4",
+    "jms/serializer-bundle": "^2.4 || ^3.0",
     "php-amqplib/php-amqplib": "~2.6",
     "php-amqplib/rabbitmq-bundle": "~1.14.3",
     "symfony/config": "^4.1 || ^5.0",
