@@ -26,7 +26,7 @@ class EntityFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateQueue(AbstractJob $job, QueueEntityInterface $expected): void
     {
-        $serializer = $this->getJMSSerializer(['serialize']);
+        $serializer = $this->getJMSSerializer();
         $serializer->expects($this->once())
             ->method('serialize')
             ->willReturn('{"id":1}');
@@ -66,7 +66,7 @@ class EntityFactoryTest extends PHPUnit_Framework_TestCase
         $this->expectExceptionCode(4);
         $this->expectExceptionMessage('json_decode error: Syntax error');
 
-        $serializer = $this->getJMSSerializer(['serialize']);
+        $serializer = $this->getJMSSerializer();
         $serializer->expects($this->once())
             ->method('serialize')
             ->willReturn('abrakadabra');
