@@ -73,9 +73,17 @@ class QueueRepository extends EntityRepository
             ->where(
                 $qb->expr()->andX(
                     $qb->expr()->in('queue.status', ':statuses'),
-                    $qb->expr()->eq('queue.isDeleted', ':not_deleted'),
                     $qb->expr()->lte('queue.scheduledAt', ':now')
                 )
+            )
+            ->orWhere(
+                $qb->expr()->andX(
+                    $qb->expr()->eq('queue.status', ':initial_status'),
+                    $qb->expr()->lte('queue.createdAt', ':from_created_at')
+                )
+            )
+            ->andWhere(
+                $qb->expr()->eq('queue.isDeleted', ':not_deleted')
             )
             ->setParameters(
                 [
@@ -84,6 +92,8 @@ class QueueRepository extends EntityRepository
                         QueueEntityMappedSuperclass::STATUS_SCHEDULED,
                     ],
                     'now' => new DateTime(),
+                    'initial_status' => QueueEntityMappedSuperclass::STATUS_INITIAL,
+                    'from_created_at' => (new DateTime())->modify('-5 minute'),
                 ]
             )
             ->setParameter('not_deleted', false, PDO::PARAM_BOOL)
