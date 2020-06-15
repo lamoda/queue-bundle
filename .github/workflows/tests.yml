@@ -18,14 +18,19 @@ jobs:
       name: PHP v${{ matrix.php }} Test ${{ matrix.env }} on ${{ matrix.os }}
 
       steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Install PHP
-        uses: shivammathur/setup-php@1.7.4
+        uses: shivammathur/setup-php@2.3.0
         with:
           php-version: ${{ matrix.php }}
           extensions: json, mbstring, pdo
+          tools: composer
 
+      - name: Show php and composer versions
+        run: |
+          php -v
+          composer -V
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
