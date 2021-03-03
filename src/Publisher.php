@@ -50,8 +50,20 @@ class Publisher
      */
     public function prepareJobForPublish(QueueInterface $queueable): self
     {
-        $this->prepareQueueForPublish(
-            $this->queueService->createQueue($queueable)
+        $queue = $this->queueService->createQueue($queueable);
+
+        $this->prepareQueueForPublish($queue);
+
+        $this->logger->info(
+            'Queue was created',
+            [
+                'tracking_id' => $queue->getId(),
+                'message' => $queue->getId(),
+                'name' => $queue->getName(),
+                'exchange' => $queue->getExchange(),
+                'job_name' => $queue->getJobName(),
+                'data' => $queue->getData(),
+            ]
         );
 
         return $this;
