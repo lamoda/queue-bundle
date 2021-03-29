@@ -16,13 +16,10 @@ use Psr\Log\LoggerInterface;
 
 class DelayServiceTest extends PHPUnit_Framework_TestCase
 {
-    use SymfonyMockTrait, DelayStrategyResolverTrait;
+    use SymfonyMockTrait;
+    use DelayStrategyResolverTrait;
 
     /**
-     * @param QueueEntityInterface $queue
-     * @param QueueEntityInterface $expectedQueue
-     * @param DateTime             $dateTime
-     *
      * @dataProvider dataDelayQueue
      */
     public function testDelayQueue(
@@ -46,16 +43,16 @@ class DelayServiceTest extends PHPUnit_Framework_TestCase
 
     /**
      * @return array
-     * @throws \Exception
      *
+     * @throws \Exception
      */
     public function dataDelayQueue(): \Generator
     {
         $strategyService = $this->createDelayStrategyResolver([]);
-        $logger          = $this->getMockLogger();
-        $dateTime        = new DateTime();
-        $queue           = $this->createQueue();
-        $expected        = clone $queue;
+        $logger = $this->getMockLogger();
+        $dateTime = new DateTime();
+        $queue = $this->createQueue();
+        $expected = clone $queue;
         $expected->setWaiting($dateTime->add(new DateInterval('PT60S')));
 
         yield 'With valid strategy key' => [
@@ -67,7 +64,7 @@ class DelayServiceTest extends PHPUnit_Framework_TestCase
         ];
 
         $strategyService = $this->createDelayStrategyResolver([$queue->getName() => 'unknown_strategy_key']);
-        $logger          = $this->getMockLogger(['warning']);
+        $logger = $this->getMockLogger(['warning']);
         $logger->expects($this->once())
             ->method('warning')
             ->with(
@@ -76,7 +73,7 @@ class DelayServiceTest extends PHPUnit_Framework_TestCase
             ]
             );
         $dateTime = new DateTime();
-        $queue    = $this->createQueue();
+        $queue = $this->createQueue();
         $expected = clone $queue;
         $expected->setWaiting($dateTime->add(new DateInterval('PT60S')));
 
@@ -93,5 +90,4 @@ class DelayServiceTest extends PHPUnit_Framework_TestCase
     {
         return new QueueEntity('queue', 'exchange', 'ClassJob', []);
     }
-
 }

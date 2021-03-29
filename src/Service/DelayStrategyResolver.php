@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Lamoda\QueueBundle\Service;
@@ -22,14 +23,11 @@ class DelayStrategyResolver
 
     public function __construct(iterable $handlers, array $queuesConfiguration = [])
     {
-        $this->handlers            = iterator_to_array($handlers);
+        $this->handlers = iterator_to_array($handlers);
         $this->queuesConfiguration = $queuesConfiguration;
     }
 
     /**
-     * @param string $queueName
-     *
-     * @return DelayStrategyInterface
      * @throws UnknownStrategyKeyException
      */
     public function getStrategy(string $queueName): DelayStrategyInterface

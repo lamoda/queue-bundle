@@ -14,10 +14,6 @@ use PDO;
 class QueueRepository extends EntityRepository
 {
     /**
-     * @param int      $maxAttempts
-     * @param int      $limit
-     * @param int|null $offset
-     *
      * @throws \Doctrine\ORM\TransactionRequiredException
      *
      * @return array|QueueEntityMappedSuperclass[]
@@ -59,9 +55,6 @@ class QueueRepository extends EntityRepository
     }
 
     /**
-     * @param int      $limit
-     * @param int|null $offset
-     *
      * @throws \Doctrine\ORM\TransactionRequiredException
      *
      * @return array|QueueEntityMappedSuperclass[]

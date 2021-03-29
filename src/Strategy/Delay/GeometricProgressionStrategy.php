@@ -17,7 +17,7 @@ class GeometricProgressionStrategy implements DelayStrategyInterface
     public function __construct(int $startIntervalSec, float $multiplier)
     {
         $this->startInterval = $startIntervalSec;
-        $this->multiplier    = $multiplier;
+        $this->multiplier = $multiplier;
     }
 
     public function generateInterval(int $iteration): DateInterval

@@ -16,8 +16,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 trait SymfonyMockTrait
 {
     /**
-     * @param array $methods
-     *
      * @return Container | \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getMockServiceContainer(array $methods = [])
@@ -29,8 +27,6 @@ trait SymfonyMockTrait
     }
 
     /**
-     * @param array $methods
-     *
      * @return EntityManager | \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getMockEntityManager(array $methods = [])
@@ -42,8 +38,6 @@ trait SymfonyMockTrait
     }
 
     /**
-     * @param array $methods
-     *
      * @return LoggerInterface | \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getMockLogger(array $methods = [])
@@ -63,8 +57,6 @@ trait SymfonyMockTrait
     }
 
     /**
-     * @param array $methods
-     *
      * @return ArgvInput | \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getMockInput(array $methods = [])
@@ -76,8 +68,6 @@ trait SymfonyMockTrait
     }
 
     /**
-     * @param array $methods
-     *
      * @return ConsoleOutput | \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getMockOutput(array $methods = [])
@@ -89,8 +79,6 @@ trait SymfonyMockTrait
     }
 
     /**
-     * @param array $methods
-     *
      * @return EventDispatcher | \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getMockEventDispatcher(array $methods = [])

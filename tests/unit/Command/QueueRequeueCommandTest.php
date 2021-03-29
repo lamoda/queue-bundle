@@ -38,9 +38,6 @@ class QueueRequeueCommandTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param bool $restored
-     * @param int  $expected
-     *
      * @throws \Exception
      *
      * @dataProvider dataExecute

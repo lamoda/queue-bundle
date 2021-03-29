@@ -24,11 +24,7 @@ class EntityFactory implements EntityFactoryInterface
     }
 
     /**
-     * @param QueueInterface $queueable
-     *
      * @throws UnexpectedValueException
-     *
-     * @return QueueEntityInterface
      */
     public function createQueue(QueueInterface $queueable): QueueEntityInterface
     {

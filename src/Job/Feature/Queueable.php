@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Lamoda\QueueBundle\Job\Feature;
 
-use JMS\Serializer\Annotation as JMS;
 use DateTime;
+use JMS\Serializer\Annotation as JMS;
 
 trait Queueable
 {

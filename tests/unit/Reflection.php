@@ -97,8 +97,6 @@ class Reflection
      * @param string  $property
      *
      * @throws \Exception
-     *
-     * @return ReflectionProperty
      */
     protected static function makePropertyAccessible($object, $property): ReflectionProperty
     {

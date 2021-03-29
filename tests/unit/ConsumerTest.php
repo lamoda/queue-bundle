@@ -22,9 +22,6 @@ class ConsumerTest extends Unit
     use SymfonyMockTrait;
 
     /**
-     * @param QueueEntityInterface $queueEntity
-     * @param int                  $expected
-     *
      * @throws Exception
      *
      * @dataProvider dataDoExecute
@@ -59,11 +56,6 @@ class ConsumerTest extends Unit
     }
 
     /**
-     * @param QueueEntityInterface $queueEntity
-     * @param Exception            $exception
-     * @param int                  $expectedStatus
-     * @param int                  $expected
-     *
      * @throws Exception
      *
      * @dataProvider dataDoExecuteException
@@ -115,8 +107,6 @@ class ConsumerTest extends Unit
     }
 
     /**
-     * @param QueueEntityInterface $queueEntity
-     * @param AMQPMessage          $message
      * @param int                  $result
      * @param int                  $id
      *
@@ -165,8 +155,6 @@ class ConsumerTest extends Unit
     }
 
     /**
-     * @param AMQPMessage $message
-     *
      * @throws Exception
      *
      * @dataProvider dataExecuteBrokenMessage()
@@ -250,8 +238,6 @@ class ConsumerTest extends Unit
     }
 
     /**
-     * @return QueueEntityInterface
-     *
      * @throws Exception
      */
     protected function getQueue(): QueueEntityInterface

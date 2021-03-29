@@ -47,8 +47,6 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param QueueEntity $queue
-     *
      * @throws \Exception
      *
      * @dataProvider dataGetToProcess()
@@ -79,7 +77,6 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param null | QueueEntity $queueEntity
-     * @param string $expectedExceptionMessage
      *
      * @throws \Exception
      *
@@ -204,7 +201,7 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
 
         $entityFactory = $this->getEntityFactory();
         $entityFactory
-            ->expects($this->once()) #at least once
+            ->expects($this->once()) //at least once
             ->method('createQueue')
             ->willReturn($queue);
 
@@ -220,7 +217,7 @@ class QueueServiceTest extends PHPUnit_Framework_TestCase
         $publisher->prepareQueueForPublish($createdQueue);
         $publisher->release();
     }
-    
+
     public function testIsTransactionActive(): void
     {
         $expected = true;

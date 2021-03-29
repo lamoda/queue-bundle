@@ -11,5 +11,6 @@ return PhpCsFixer\Config::create()
         'phpdoc_align' => false,
         'phpdoc_to_comment' => false,
         'header_comment' => false,
+        'single_line_throw' => false,
     ])
     ->setFinder($finder);

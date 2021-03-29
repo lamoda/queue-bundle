@@ -13,9 +13,6 @@ use PHPUnit_Framework_TestCase;
 class QueueTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @param string               $statusTitle
-     * @param QueueEntityInterface $queue
-     *
      * @dataProvider dataQueues
      */
     public function testStatusAsString(string $statusTitle, QueueEntityInterface $queue): void
@@ -25,8 +22,6 @@ class QueueTest extends PHPUnit_Framework_TestCase
 
     /**
      * @throws \Exception
-     *
-     * @return array
      */
     public function dataQueues(): array
     {
@@ -119,9 +114,6 @@ class QueueTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param int  $maxAttempts
-     * @param bool $expected
-     *
      * @dataProvider dataMaxAttemptsReached()
      */
     public function testMaxAttemptsReached(int $maxAttempts, bool $expected): void

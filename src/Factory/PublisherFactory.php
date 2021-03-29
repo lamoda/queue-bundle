@@ -69,8 +69,6 @@ class PublisherFactory
     }
 
     /**
-     * @param QueueInterface $queueable
-     *
      * @throws UnexpectedValueException
      */
     public function publish(QueueInterface $queueable): void
