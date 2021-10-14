@@ -7,6 +7,7 @@ namespace Lamoda\QueueBundle\Tests\Unit;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\MockObject\MockBuilder;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -100,5 +101,5 @@ trait SymfonyMockTrait
             ->getMock();
     }
 
-    abstract protected function getMockBuilder($className);
+    abstract protected function getMockBuilder(string $className): MockBuilder;
 }

@@ -6,7 +6,7 @@ checks:
 build:
   environment:
     php:
-      version: 7.1
+      version: 7.2
   tests:
     override:
       - command: vendor/bin/codecept run unit --coverage-xml=build/clover.xml
