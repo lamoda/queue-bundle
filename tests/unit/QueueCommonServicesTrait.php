@@ -16,14 +16,15 @@ use Lamoda\QueueBundle\Service\DelayService;
 use Lamoda\QueueBundle\Service\QueueRequeueService;
 use Lamoda\QueueBundle\Service\QueueService;
 use OldSound\RabbitMqBundle\RabbitMq\Producer;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 
 trait QueueCommonServicesTrait
 {
     /**
      * @param array|null $methods
      *
-     * @return EntityFactory | PHPUnit_Framework_MockObject_MockObject
+     * @return EntityFactory | MockObject
      */
     protected function getMockEntityFactory(?array $methods = null)
     {
@@ -33,7 +34,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return QueueService | PHPUnit_Framework_MockObject_MockObject
+     * @return QueueService | MockObject
      */
     protected function getMockQueueService(?array $methods = null)
     {
@@ -43,7 +44,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return Publisher | PHPUnit_Framework_MockObject_MockObject
+     * @return Publisher | MockObject
      */
     protected function getMockPublisher(?array $methods = null)
     {
@@ -53,7 +54,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return PublisherFactory | PHPUnit_Framework_MockObject_MockObject
+     * @return PublisherFactory | MockObject
      */
     protected function getMockPublisherFactory(?array $methods = null)
     {
@@ -63,7 +64,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return Consumer | PHPUnit_Framework_MockObject_MockObject
+     * @return Consumer | MockObject
      */
     protected function getMockConsumer(?array $methods = null)
     {
@@ -73,7 +74,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return QueueRequeueService | PHPUnit_Framework_MockObject_MockObject
+     * @return QueueRequeueService | MockObject
      */
     protected function getMockQueueRequeueService(?array $methods = null)
     {
@@ -83,7 +84,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return PHPUnit_Framework_MockObject_MockObject | QueueConsumerCommand
+     * @return MockObject | QueueConsumerCommand
      */
     protected function getQueueMockConsumerCommand(?array $methods = null)
     {
@@ -93,7 +94,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return QueueRepository | PHPUnit_Framework_MockObject_MockObject
+     * @return QueueRepository | MockObject
      */
     protected function getMockQueueRepository(?array $methods = null)
     {
@@ -103,7 +104,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return HandlerInterface | PHPUnit_Framework_MockObject_MockObject
+     * @return HandlerInterface | MockObject
      */
     protected function getMockHandler(?array $methods = null)
     {
@@ -113,7 +114,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return Producer | PHPUnit_Framework_MockObject_MockObject
+     * @return Producer | MockObject
      */
     protected function getMockProducer(?array $methods = null)
     {
@@ -123,7 +124,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return AbstractJob | PHPUnit_Framework_MockObject_MockObject
+     * @return AbstractJob | MockObject
      */
     protected function getMockAbstractJob(?array $methods = null)
     {
@@ -137,12 +138,12 @@ trait QueueCommonServicesTrait
      * @param string     $serviceName
      * @param array|null $methods
      *
-     * @return PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function getQueueMockService(
         string $serviceName,
         ?array $methods = null
-    ): PHPUnit_Framework_MockObject_MockObject {
+    ): MockObject {
         return $this->getMockBuilder($serviceName)
             ->disableOriginalConstructor()
             ->setMethods($methods)
@@ -152,7 +153,7 @@ trait QueueCommonServicesTrait
     /**
      * @param array|null $methods
      *
-     * @return DelayService | PHPUnit_Framework_MockObject_MockObject
+     * @return DelayService | MockObject
      */
     private function getMockDelayService(?array $methods = null)
     {
@@ -162,5 +163,5 @@ trait QueueCommonServicesTrait
             ->getMock();
     }
 
-    abstract protected function getMockBuilder($className);
+    abstract protected function getMockBuilder(string $className): MockBuilder;
 }

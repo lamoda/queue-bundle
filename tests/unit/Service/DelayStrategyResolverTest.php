@@ -21,8 +21,8 @@ class DelayStrategyResolverTest extends PHPUnit_Framework_TestCase
         $resolver = $this->createDelayStrategyResolver($strategiesByQueues);
         $strategy = $resolver->getStrategy($checkingQueueName);
         $this->assertInstanceOf(ArithmeticProgressionStrategy::class, $strategy);
-        $this->assertAttributeEquals(100, 'startInterval', $strategy);
-        $this->assertAttributeEquals(4, 'multiplier', $strategy);
+        $this->assertEquals(100, $strategy->getStartInterval());
+        $this->assertEquals(4, $strategy->getMultiplier());
     }
 
     public function testGetDefaultStrategy()
@@ -33,8 +33,8 @@ class DelayStrategyResolverTest extends PHPUnit_Framework_TestCase
         $resolver = $this->createDelayStrategyResolver($strategiesByQueues);
         $strategy = $resolver->getStrategy($checkingQueueName);
         $this->assertInstanceOf(GeometricProgressionStrategy::class, $strategy);
-        $this->assertAttributeEquals(60, 'startInterval', $strategy);
-        $this->assertAttributeEquals(3, 'multiplier', $strategy);
+        $this->assertEquals(60, $strategy->getStartInterval());
+        $this->assertEquals(3, $strategy->getMultiplier());
     }
 
     public function testFailGetDefaultStrategy()

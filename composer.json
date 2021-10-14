@@ -1,40 +1,42 @@
 {
-    "name": "lamoda/queue-bundle",
-    "description": "Symfony queue bundle",
-    "type": "library",
-    "license": "MIT",
-    "minimum-stability": "stable",
-    "require": {
-        "php": ">=7.1.0",
-        "ext-PDO": "*",
-        "ext-json": "*",
-        "doctrine/doctrine-bundle": "^1.9 || ^2.0",
-        "doctrine/orm": "~2.3",
-        "jms/serializer-bundle": "^2.4 || ^3.0",
-        "php-amqplib/php-amqplib": "~3.0",
-        "php-amqplib/rabbitmq-bundle": "~2.9.0",
-        "symfony/config": "^4.1 || ^5.0",
-        "symfony/console": "^4.2 || ^5.0",
-        "symfony/dependency-injection": "^4.2 || ^5.0",
-        "symfony/event-dispatcher": "^4.3 || ^5.0",
-        "symfony/framework-bundle": "^4.3",
-        "symfony/monolog-bundle": "^3.3"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.13",
-        "codeception/codeception": "^4.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "Lamoda\\QueueBundle\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Lamoda\\QueueBundle\\Tests\\Unit\\": "tests/unit/"
-        }
-    },
-    "config": {
-        "sort-packages": true
+  "name": "lamoda/queue-bundle",
+  "description": "Symfony queue bundle",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.2.0",
+    "ext-PDO": "*",
+    "ext-json": "*",
+    "doctrine/doctrine-bundle": "^1.9 || ^2.0",
+    "doctrine/orm": "~2.3",
+    "jms/serializer-bundle": "^2.4 || ^3.0",
+    "php-amqplib/php-amqplib": "~3.0",
+    "php-amqplib/rabbitmq-bundle": "~2.9.0",
+    "symfony/config": "^4.1 || ^5.0",
+    "symfony/console": "^4.2 || ^5.0",
+    "symfony/dependency-injection": "^4.2 || ^5.0",
+    "symfony/event-dispatcher": "^4.3 || ^5.0",
+    "symfony/framework-bundle": "^4.3",
+    "symfony/monolog-bundle": "^3.3"
+  },
+  "require-dev": {
+    "codeception/codeception": "^4.1",
+    "codeception/module-asserts": "^1.3",
+    "friendsofphp/php-cs-fixer": "^2.13",
+    "phpunit/phpunit": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lamoda\\QueueBundle\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Lamoda\\QueueBundle\\Tests\\Unit\\": "tests/unit/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
 }
